@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Samir Ingle</title>
+<meta name="description" content="Samir Ingle — software engineer in San Francisco. Previously AWS S3, Routing API team responsible for all S3 traffic." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 fill=%22%230b0b0c%22/><text x=%2216%22 y=%2222%22 font-size=%2218%22 fill=%22%237aa2f7%22 text-anchor=%22middle%22 font-family=%22monospace%22>%25</text></svg>" />
+<style>
+  :root{
+    --bg:#0b0b0c;
+    --ink:#e6e6e6;
+    --dim:#666;
+    --prompt:#7aa2f7;
+    --ok:#9ece6a;
+    --line:#1a1a1c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased}
+  body{
+    background:var(--bg);color:var(--ink);
+    font:14.5px/1.95 ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    min-height:100vh;display:flex;align-items:center;padding:8vh 28px;
+  }
+  main{width:100%;max-width:500px;margin:0 auto}
+
+  .prompt{white-space:pre-wrap}
+  .p{color:var(--prompt)}
+  .dim{color:var(--dim)}
+  .cmd{color:var(--ink)}
+
+  /* output: each line prints one at a time */
+  .out{margin:6px 0 26px}
+  .line{
+    display:flex;gap:18px;
+    opacity:0;transform:translateY(2px);
+  }
+  .line.show{opacity:1;transform:none;transition:opacity .18s ease,transform .18s ease}
+  .k{color:var(--dim);width:6ch;flex:none}
+  .v{color:var(--ink)}
+  .v .ok{color:var(--ok)}
+  .v a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+  .v a:hover,.v a:focus-visible{border-color:var(--ink);outline:none}
+
+  .rule{
+    height:1px;background:var(--line);margin:12px 0;
+    opacity:0;transform:scaleX(.4);transform-origin:left;
+  }
+  .rule.show{opacity:1;transform:none;transition:opacity .18s ease,transform .25s ease}
+
+  .caret{
+    display:inline-block;width:.55ch;height:1.05em;background:var(--ink);
+    transform:translateY(2px);animation:blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .line,.rule{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="prompt"><span class="p">samir@sf</span> <span class="dim">~</span> % <span class="cmd" id="cmd"></span><span class="caret" id="caret1"></span></div>
+
+  <div class="out" id="out" aria-live="polite">
+    <div class="line"><span class="k">name</span><span class="v">samir ingle</span></div>
+    <div class="line"><span class="k">role</span><span class="v">software engineer · san francisco</span></div>
+    <div class="line"><span class="k">prev</span><span class="v"><span class="ok">✓</span> aws s3 — routing api, responsible for all s3 traffic</span></div>
+    <div class="rule"></div>
+    <div class="line"><span class="k">code</span><span class="v"><a href="https://github.com/SamirIngley" target="_blank" rel="noopener">github.com/SamirIngley</a></span></div>
+    <div class="line"><span class="k">words</span><span class="v"><a href="https://samiringle.medium.com" target="_blank" rel="noopener">samiringle.medium.com</a></span></div>
+    <div class="line"><span class="k">x</span><span class="v"><a href="https://twitter.com/samir_ingle" target="_blank" rel="noopener">@samir_ingle</a></span></div>
+    <div class="line"><span class="k">mail</span><span class="v"><a href="mailto:samir.ingle7@gmail.com">samir.ingle7@gmail.com</a></span></div>
+  </div>
+
+  <div class="prompt" id="prompt2" style="visibility:hidden"><span class="p">samir@sf</span> <span class="dim">~</span> % <span class="caret"></span></div>
+</main>
+
+<script>
+(function(){
+  var cmd = document.getElementById('cmd');
+  var caret1 = document.getElementById('caret1');
+  var out = document.getElementById('out');
+  var prompt2 = document.getElementById('prompt2');
+  var rows = Array.prototype.slice.call(out.children); // .line and .rule, in order
+  var text = 'whoami --full';
+
+  var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  function printLines(){
+    caret1.style.display = 'none';
+    var i = 0;
+    (function next(){
+      if(i < rows.length){
+        rows[i].classList.add('show');
+        var isRule = rows[i].classList.contains('rule');
+        i++;
+        setTimeout(next, isRule ? 320 : 260 + Math.random()*140);
+      } else {
+        setTimeout(function(){ prompt2.style.visibility = 'visible'; }, 360);
+      }
+    })();
+  }
+
+  if(reduce){
+    cmd.textContent = text;
+    caret1.style.display = 'none';
+    rows.forEach(function(r){ r.classList.add('show'); });
+    prompt2.style.visibility = 'visible';
+  } else {
+    var c = 0;
+    (function type(){
+      if(c <= text.length){
+        cmd.textContent = text.slice(0, c++);
+        setTimeout(type, 55 + Math.random()*45);
+      } else {
+        setTimeout(printLines, 320);
+      }
+    })();
+  }
+})();
+</script>
+</body>
+</html>
